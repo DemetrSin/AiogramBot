@@ -1,13 +1,9 @@
 import asyncio
-import logging
 import os
-import sys
 
-from aiogram import Bot, Dispatcher, html, F
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram import Bot, Dispatcher
+from apps.handlers import router
+
 from dotenv import find_dotenv, load_dotenv
 
 
@@ -17,22 +13,11 @@ if ENV_FILE:
 
 TOKEN = os.environ.get('TOKEN')
 
-bot = Bot(token=TOKEN)
-dp = Dispatcher()
-
-
-@dp.message(CommandStart())
-async def cmd_start(message: Message):
-    await message.answer('Hello')
-    await message.reply('How are you?')
-
-
-@dp.message(Command('help'))
-async def cmd_help(message: Message):
-    await message.reply('What is you problem?')
-
 
 async def main():
+    bot = Bot(token=TOKEN)
+    dp = Dispatcher()
+    dp.include_router(router)
     await dp.start_polling(bot)
 
 
